@@ -2,6 +2,7 @@ from minio import Minio
 from minio.error import S3Error
 from app.core.config import get_settings
 import uuid
+from io import BytesIO
 
 settings = get_settings()
 
@@ -29,11 +30,14 @@ class MinioService:
             # Generate a unique filename
             filename = f"{uuid.uuid4()}.png"
             
+            # Convert bytes to BytesIO object
+            image_bytes = BytesIO(image_data)
+            
             # Upload the image
             self.client.put_object(
                 bucket_name=settings.MINIO_BUCKET_NAME,
                 object_name=filename,
-                data=image_data,
+                data=image_bytes,
                 length=len(image_data),
                 content_type=content_type
             )

@@ -13,21 +13,31 @@ from selenium.webdriver.common.by import By
 
 class TemplateService:
     def __init__(self):
-        self.templates = {
-            1: self._load_template("business_card"),
-            2: self._load_template("product_ad"),
-            3: self._load_template("event_invite")
-        }
+        self.templates = self._load_all_templates()
         self.driver = None
 
-    def _load_template(self, template_name: str) -> str:
-        """Load template content from file"""
-        template_path = Path(__file__).parent.parent / "templates" / f"{template_name}.html"
-        if not template_path.exists():
-            raise FileNotFoundError(f"Template {template_name} not found")
+    def _load_all_templates(self) -> Dict[str, str]:
+        """Automatically load all templates from the templates directory"""
+        templates = {}
+        templates_dir = Path(__file__).parent.parent / "templates"
         
-        with open(template_path, "r", encoding="utf-8") as f:
-            return f.read()
+        if not templates_dir.exists():
+            raise FileNotFoundError("Templates directory not found")
+        
+        # Load all HTML files from the templates directory
+        for template_file in templates_dir.glob("*.html"):
+            template_name = template_file.stem  # Get filename without extension
+            with open(template_file, "r", encoding="utf-8") as f:
+                templates[template_name] = f.read()
+        
+        if not templates:
+            raise FileNotFoundError("No template files found in templates directory")
+        
+        return templates
+
+    def get_available_templates(self) -> list[str]:
+        """Return list of available template names"""
+        return list(self.templates.keys())
 
     def _ensure_driver(self):
         """Ensure WebDriver is initialized"""
@@ -40,13 +50,13 @@ class TemplateService:
             service = Service(ChromeDriverManager().install())
             self.driver = webdriver.Chrome(service=service, options=chrome_options)
 
-    async def render_template(self, template_id: int, data: Dict) -> bytes:
+    async def render_template(self, template_name: str, data: Dict) -> bytes:
         """Render template with data and convert to image"""
-        if template_id not in self.templates:
-            raise ValueError(f"Template ID {template_id} not found")
+        if template_name not in self.templates:
+            raise ValueError(f"Template '{template_name}' not found. Available templates: {', '.join(self.get_available_templates())}")
 
         # Get the template
-        template_content = self.templates[template_id]
+        template_content = self.templates[template_name]
         template = Template(template_content)
 
         # Render the template with the provided data

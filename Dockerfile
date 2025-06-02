@@ -1,5 +1,5 @@
-# Use Python 3.11 as base image (avoiding 3.13 due to potential compatibility issues)
-FROM python:3.11-slim
+# Use Python 3.13 as base image to match local environment
+FROM python:3.13-slim
 
 # Set working directory
 WORKDIR /app
@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
 # Copy the rest of the application
 COPY . .

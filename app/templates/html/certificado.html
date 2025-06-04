@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificado - {{ participante }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .certificate {
+            background: white;
+            width: 1000px;
+            height: 700px;
+            padding: 60px;
+            position: relative;
+            border: 15px solid #f8f9fa;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+        }
+        
+        .certificate::before {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            right: 30px;
+            bottom: 30px;
+            border: 3px solid #667eea;
+            border-radius: 5px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .certificate-title {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .certificate-subtitle {
+            font-size: 18px;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+        
+        .ornament {
+            font-size: 36px;
+            color: #667eea;
+            margin: 20px 0;
+        }
+        
+        .content {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .participant-intro {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        
+        .participant-name {
+            font-size: 42px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 30px 0;
+            text-decoration: underline;
+            text-decoration-color: #764ba2;
+            text-underline-offset: 10px;
+            text-decoration-thickness: 3px;
+        }
+        
+        .course-info {
+            font-size: 24px;
+            color: #333;
+            margin: 30px 0;
+            line-height: 1.5;
+        }
+        
+        .course-name {
+            font-weight: bold;
+            color: #764ba2;
+            font-size: 28px;
+            margin: 15px 0;
+        }
+        
+        .details {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin: 40px 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .left-details, .right-details {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .instructor-info, .date-info, .workload-info {
+            margin-bottom: 20px;
+        }
+        
+        .label {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        
+        .value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .map-section {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .map-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .map-container {
+            display: inline-block;
+            border: 3px solid #667eea;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .map-image {
+            width: 300px;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .location-text {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .signature-section {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 60px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .signature {
+            text-align: center;
+            width: 200px;
+        }
+        
+        .signature-line {
+            border-bottom: 2px solid #333;
+            margin-bottom: 10px;
+            height: 40px;
+        }
+        
+        .signature-label {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .signature-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 5px;
+        }
+        
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            left: 60px;
+            right: 60px;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .decorative-element {
+            position: absolute;
+            color: #667eea;
+            opacity: 0.1;
+            font-size: 120px;
+            z-index: 0;
+        }
+        
+        .decorative-element.top-left {
+            top: 20px;
+            left: 20px;
+        }
+        
+        .decorative-element.bottom-right {
+            bottom: 20px;
+            right: 20px;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                min-height: auto;
+            }
+            
+            .certificate {
+                box-shadow: none;
+                border: 10px solid #f8f9fa;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="certificate">
+        <!-- Decorative Elements -->
+        <div class="decorative-element top-left">★</div>
+        <div class="decorative-element bottom-right">★</div>
+        
+        <!-- Header -->
+        <div class="header">
+            <div class="certificate-title">Certificado</div>
+            <div class="certificate-subtitle">de Conclusão</div>
+            <div class="ornament">❈ ❈ ❈</div>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <div class="participant-intro">
+                Certificamos que
+            </div>
+            
+            <div class="participant-name">{{ participante }}</div>
+            
+            <div class="course-info">
+                concluiu com êxito o curso
+                <div class="course-name">{{ curso }}</div>
+                {% if carga_horaria %}
+                    com carga horária de {{ carga_horaria }}
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Details Section -->
+        <div class="details">
+            <div class="left-details">
+                {% if instrutor %}
+                <div class="instructor-info">
+                    <div class="label">Instrutor</div>
+                    <div class="value">{{ instrutor }}</div>
+                </div>
+                {% endif %}
+                
+                {% if carga_horaria %}
+                <div class="workload-info">
+                    <div class="label">Carga Horária</div>
+                    <div class="value">{{ carga_horaria }}</div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="right-details">
+                <div class="date-info">
+                    <div class="label">Data de Conclusão</div>
+                    <div class="value">{{ data_conclusao or data_atual }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Map Section (if location data is provided) -->
+        {% if mapa_url or endereco %}
+        <div class="map-section">
+            <div class="map-label">Local de Realização</div>
+            <div class="map-container">
+                {% if mapa_url %}
+                    <img src="{{ mapa_url }}" alt="Mapa da localização" class="map-image">
+                {% else %}
+                    <div style="width: 300px; height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #666;">
+                        Mapa não disponível
+                    </div>
+                {% endif %}
+            </div>
+            {% if endereco %}
+                <div class="location-text">{{ endereco }}</div>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <!-- Signature Section -->
+        <div class="signature-section">
+            <div class="signature">
+                <div class="signature-line"></div>
+                <div class="signature-label">Coordenação</div>
+            </div>
+            
+            <div class="signature">
+                <div class="signature-line"></div>
+                <div class="signature-label">Direção</div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            Certificado gerado automaticamente em {{ data_atual }}
+        </div>
+    </div>
+</body>
+</html> 

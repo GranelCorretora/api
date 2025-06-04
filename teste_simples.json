@@ -1,0 +1,63 @@
+{
+    "template_name": "catalogo_produtos",
+    "data": {
+        "data_geracao": "04/06/2025 16:45",
+        "ano_atual": "2025",
+        "catalogo_fabricantes": [
+            {
+                "nome_fabricante": "MULTILASER",
+                "produtos": [
+                    {
+                        "codigo_produto": "035734",
+                        "nome_produto": "ESCOVA DE DENTE SOFT C/ LIMPADOR",
+                        "preco_sugerido_reais": 6.06,
+                        "unidade": "2UN",
+                        "descricao_curta": "Escova de dente macia",
+                        "url_imagem_placeholder": "https://placehold.co/300x200/e0e0e0/777777?text=Produto+Teste"
+                    },
+                    {
+                        "codigo_produto": "035810",
+                        "nome_produto": "ESCOVA DE DENTE POP CERDAS MACIAS",
+                        "preco_sugerido_reais": 6.15,
+                        "unidade": "EMBALAGEM",
+                        "descricao_curta": "Escova de dente popular",
+                        "url_imagem_placeholder": "https://placehold.co/300x200/e0e0e0/777777?text=Produto+Teste"
+                    },
+                    {
+                        "codigo_produto": "036001",
+                        "nome_produto": "CREME DENTAL PROTEÇÃO TOTAL",
+                        "preco_sugerido_reais": 8.99,
+                        "unidade": "1UN",
+                        "descricao_curta": "Creme dental com flúor",
+                        "url_imagem_placeholder": "https://placehold.co/300x200/e0e0e0/777777?text=Produto+Teste"
+                    }
+                ]
+            },
+            {
+                "nome_fabricante": "FISHER PRICE",
+                "produtos": [
+                    {
+                        "codigo_produto": "037386",
+                        "nome_produto": "ESPAÇADOR FISHER PRICE HC188",
+                        "preco_sugerido_reais": 28.73,
+                        "unidade": "1UN",
+                        "categoria": "Infantil",
+                        "descricao_curta": "Espaçador para medicamentos",
+                        "url_imagem_placeholder": "https://placehold.co/300x200/e0e0e0/777777?text=Produto+Teste"
+                    },
+                    {
+                        "codigo_produto": "037500",
+                        "nome_produto": "BRINQUEDO EDUCATIVO FISHER PRICE",
+                        "preco_sugerido_reais": 45.90,
+                        "unidade": "1UN",
+                        "categoria": "Infantil",
+                        "descricao_curta": "Brinquedo educativo colorido",
+                        "url_imagem_placeholder": "https://placehold.co/300x200/e0e0e0/777777?text=Produto+Teste"
+                    }
+                ]
+            }
+        ]
+    },
+    "output_format": "png",
+    "upload_to_minio": false
+} 

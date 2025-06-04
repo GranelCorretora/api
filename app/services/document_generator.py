@@ -141,6 +141,9 @@ class DocumentGenerator:
             elif template_name == "fique_de_olho":
                 y_position = self._draw_fique_de_olho_image(draw, processed_data, width, y_position, 
                                                           title_font, header_font, normal_font, small_font, text_color)
+            elif template_name == "catalogo_produtos":
+                y_position = self._draw_catalogo_produtos_image(draw, processed_data, width, y_position, 
+                                                              title_font, header_font, normal_font, small_font, text_color)
             
             # Salvar imagem
             if format.lower() == "jpeg" and img.mode != "RGB":
@@ -380,6 +383,101 @@ class DocumentGenerator:
         
         return y_pos
     
+    def _draw_catalogo_produtos_image(self, draw, data, width, y_pos, title_font, header_font, normal_font, small_font, text_color):
+        """Desenha catálogo de produtos na imagem"""
+        # Título
+        title = "CATÁLOGO DE PRODUTOS"
+        title_bbox = draw.textbbox((0, 0), title, font=title_font)
+        title_width = title_bbox[2] - title_bbox[0]
+        draw.text(((width - title_width) // 2, y_pos), title, fill="#2196F3", font=title_font)
+        y_pos += 60
+        
+        # Data de geração
+        if data.get('data_geracao'):
+            date_text = f"Atualizado em: {data['data_geracao']}"
+            date_bbox = draw.textbbox((0, 0), date_text, font=normal_font)
+            date_width = date_bbox[2] - date_bbox[0]
+            draw.text(((width - date_width) // 2, y_pos), date_text, fill="gray", font=normal_font)
+            y_pos += 50
+        
+        # Iterar sobre fabricantes
+        for fabricante in data.get('catalogo_fabricantes', []):
+            # Nome do fabricante
+            draw.text((50, y_pos), fabricante['nome_fabricante'], fill="#1976D2", font=header_font)
+            y_pos += 40
+            
+            # Linha divisória
+            draw.line([50, y_pos, width-50, y_pos], fill="#E0E0E0", width=2)
+            y_pos += 20
+            
+            # Produtos em grid 2x2
+            products = fabricante.get('produtos', [])
+            col_width = (width - 120) // 2  # 2 colunas com margem
+            
+            for i in range(0, len(products), 2):
+                row_products = products[i:i+2]
+                
+                # Desenhar produtos lado a lado
+                for col, produto in enumerate(row_products):
+                    x_start = 50 + (col * (col_width + 20))
+                    
+                    # Caixa do produto
+                    box_height = 140
+                    draw.rectangle([x_start, y_pos, x_start + col_width, y_pos + box_height], 
+                                 outline="#E0E0E0", fill="#F5F5F5", width=1)
+                    
+                    # Área da imagem fake
+                    img_height = 60
+                    draw.rectangle([x_start + 10, y_pos + 10, x_start + col_width - 10, y_pos + 10 + img_height], 
+                                 outline="#2196F3", fill="#BBDEFB", width=1)
+                    
+                    # Texto "PRODUTO" na imagem
+                    img_text = "PRODUTO"
+                    img_bbox = draw.textbbox((0, 0), img_text, font=small_font)
+                    img_text_width = img_bbox[2] - img_bbox[0]
+                    draw.text((x_start + (col_width - img_text_width) // 2, y_pos + 35), 
+                             img_text, fill="#1976D2", font=small_font)
+                    
+                    # Informações do produto
+                    info_y = y_pos + 80
+                    
+                    # Nome do produto (limitado)
+                    product_name = produto['nome_produto']
+                    if len(product_name) > 25:
+                        product_name = product_name[:25] + "..."
+                    
+                    name_bbox = draw.textbbox((0, 0), product_name, font=normal_font)
+                    name_width = name_bbox[2] - name_bbox[0]
+                    draw.text((x_start + (col_width - name_width) // 2, info_y), 
+                             product_name, fill="black", font=normal_font)
+                    info_y += 25
+                    
+                    # Código do produto
+                    code_text = f"Cód: {produto['codigo_produto']}"
+                    code_bbox = draw.textbbox((0, 0), code_text, font=small_font)
+                    code_width = code_bbox[2] - code_bbox[0]
+                    draw.text((x_start + (col_width - code_width) // 2, info_y), 
+                             code_text, fill="gray", font=small_font)
+                    info_y += 20
+                    
+                    # Preço
+                    preco_formatado = f"R$ {produto['preco_sugerido_reais']:.2f}".replace(".", ",")
+                    price_bbox = draw.textbbox((0, 0), preco_formatado, font=header_font)
+                    price_width = price_bbox[2] - price_bbox[0]
+                    draw.text((x_start + (col_width - price_width) // 2, info_y), 
+                             preco_formatado, fill="#4CAF50", font=header_font)
+                
+                y_pos += box_height + 25
+        
+        # Rodapé
+        y_pos += 30
+        footer_text = f"© {data.get('ano_atual', '2025')} - Todos os direitos reservados"
+        footer_bbox = draw.textbbox((0, 0), footer_text, font=small_font)
+        footer_width = footer_bbox[2] - footer_bbox[0]
+        draw.text(((width - footer_width) // 2, y_pos), footer_text, fill="gray", font=small_font)
+        
+        return y_pos
+    
     async def _generate_pdf_weasyprint(self, template_name: str, data: Dict[str, Any], output_path: str):
         """Gera PDF usando WeasyPrint"""
         import weasyprint
@@ -418,6 +516,8 @@ class DocumentGenerator:
                 self._build_certificado_reportlab(story, styles, processed_data)
             elif template_name == "fique_de_olho":
                 self._build_fique_de_olho_reportlab(story, styles, processed_data)
+            elif template_name == "catalogo_produtos":
+                self._build_catalogo_produtos_reportlab(story, styles, processed_data)
             
             doc.build(story)
         
@@ -548,6 +648,202 @@ class DocumentGenerator:
         # Footer
         story.append(Spacer(1, 0.2*inch))
         story.append(Paragraph("@granelcorretora", styles['Normal']))
+    
+    def _build_catalogo_produtos_reportlab(self, story, styles, data):
+        """Constrói catálogo de produtos usando ReportLab"""
+        from reportlab.platypus import Paragraph, Spacer, Table, TableStyle, Image as RLImage
+        from reportlab.lib import colors
+        from reportlab.lib.units import inch, cm
+        from reportlab.lib.enums import TA_CENTER, TA_LEFT
+        from reportlab.lib.styles import ParagraphStyle
+        from reportlab.graphics.shapes import Drawing, Rect, String
+        from reportlab.graphics import renderPDF
+        from io import BytesIO
+        
+        # Título
+        title_style = ParagraphStyle(
+            'CustomTitle',
+            parent=styles['Title'],
+            fontSize=28,
+            spaceAfter=20,
+            alignment=TA_CENTER,
+            textColor=colors.HexColor('#2196F3')
+        )
+        story.append(Paragraph("CATÁLOGO DE PRODUTOS", title_style))
+        
+        # Data de geração
+        if data.get('data_geracao'):
+            date_style = ParagraphStyle(
+                'DateStyle',
+                parent=styles['Normal'],
+                fontSize=12,
+                alignment=TA_CENTER,
+                textColor=colors.grey,
+                spaceAfter=30
+            )
+            story.append(Paragraph(f"Atualizado em: {data['data_geracao']}", date_style))
+        
+        story.append(Spacer(1, 0.3*inch))
+        
+        # Estilo do fabricante
+        manufacturer_style = ParagraphStyle(
+            'Manufacturer',
+            parent=styles['Heading1'],
+            fontSize=20,
+            textColor=colors.HexColor('#1976D2'),
+            spaceBefore=25,
+            spaceAfter=15,
+            alignment=TA_LEFT
+        )
+        
+        # Para cada fabricante
+        for fabricante in data.get('catalogo_fabricantes', []):
+            story.append(Paragraph(fabricante['nome_fabricante'], manufacturer_style))
+            
+            # Criar uma grade de produtos (2 colunas)
+            products = fabricante.get('produtos', [])
+            
+            # Processar produtos em pares para layout de 2 colunas
+            for i in range(0, len(products), 2):
+                row_products = products[i:i+2]
+                
+                # Criar dados da tabela para esta linha
+                table_data = []
+                
+                # Linha com imagens placeholder
+                img_row = []
+                for produto in row_products:
+                    # Criar placeholder de imagem simples usando Drawing
+                    try:
+                        d = Drawing(120, 80)
+                        d.add(Rect(0, 0, 120, 80, fillColor=colors.lightblue, strokeColor=colors.blue, strokeWidth=1))
+                        d.add(String(60, 45, "PRODUTO", textAnchor='middle', fontSize=10, fillColor=colors.blue))
+                        d.add(String(60, 30, produto['codigo_produto'], textAnchor='middle', fontSize=8, fillColor=colors.darkblue))
+                        
+                        # Renderizar como imagem
+                        img_buffer = BytesIO()
+                        renderPDF.drawToFile(d, img_buffer, fmt='PNG')
+                        img_buffer.seek(0)
+                        
+                        img = RLImage(img_buffer, width=100, height=67)
+                        img_row.append(img)
+                    except Exception as e:
+                        # Fallback: usar texto
+                        placeholder_style = ParagraphStyle(
+                            'PlaceholderStyle',
+                            parent=styles['Normal'],
+                            fontSize=10,
+                            alignment=TA_CENTER,
+                            textColor=colors.blue,
+                            backColor=colors.lightblue
+                        )
+                        img_row.append(Paragraph("[IMAGEM DO PRODUTO]", placeholder_style))
+                
+                # Preencher linha se houver apenas 1 produto
+                while len(img_row) < 2:
+                    img_row.append("")
+                
+                table_data.append(img_row)
+                
+                # Linha com informações dos produtos
+                info_row = []
+                for produto in row_products:
+                    # Criar célula com informações do produto
+                    product_name = produto['nome_produto']
+                    if len(product_name) > 35:
+                        product_name = product_name[:35] + "..."
+                    
+                    preco_formatado = f"R$ {produto['preco_sugerido_reais']:.2f}".replace(".", ",")
+                    
+                    # Criar parágrafos separados para melhor controle
+                    name_style = ParagraphStyle(
+                        'ProductName',
+                        parent=styles['Normal'],
+                        fontSize=12,
+                        alignment=TA_CENTER,
+                        textColor=colors.black,
+                        spaceAfter=3
+                    )
+                    
+                    code_style = ParagraphStyle(
+                        'ProductCode',
+                        parent=styles['Normal'],
+                        fontSize=9,
+                        alignment=TA_CENTER,
+                        textColor=colors.grey,
+                        spaceAfter=3
+                    )
+                    
+                    price_style = ParagraphStyle(
+                        'ProductPrice',
+                        parent=styles['Normal'],
+                        fontSize=14,
+                        alignment=TA_CENTER,
+                        textColor=colors.HexColor('#4CAF50'),
+                        spaceAfter=0
+                    )
+                    
+                    # Criar conteúdo da célula usando uma tabela interna
+                    cell_data = [
+                        [Paragraph(f"<b>{product_name}</b>", name_style)],
+                        [Paragraph(f"Cod: {produto['codigo_produto']}", code_style)],
+                        [Paragraph(f"<b>{preco_formatado}</b>", price_style)]
+                    ]
+                    
+                    cell_table = Table(cell_data, colWidths=[2.5*inch])
+                    cell_table.setStyle(TableStyle([
+                        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                        ('PADDING', (0, 0), (-1, -1), 2),
+                    ]))
+                    
+                    info_row.append(cell_table)
+                
+                # Preencher linha se houver apenas 1 produto
+                while len(info_row) < 2:
+                    info_row.append("")
+                
+                table_data.append(info_row)
+                
+                # Criar tabela
+                product_table = Table(table_data, colWidths=[2.7*inch, 2.7*inch])
+                product_table.setStyle(TableStyle([
+                    # Estilo geral
+                    ('BACKGROUND', (0, 0), (-1, -1), colors.white),
+                    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                    ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Imagens centralizadas
+                    ('VALIGN', (0, 1), (-1, 1), 'TOP'),     # Texto no topo
+                    
+                    # Bordas elegantes
+                    ('BOX', (0, 0), (-1, -1), 1.5, colors.HexColor('#E0E0E0')),
+                    ('LINEBELOW', (0, 0), (-1, 0), 1, colors.HexColor('#E0E0E0')),
+                    ('LINEBETWEEN', (0, 0), (0, -1), 1, colors.HexColor('#E0E0E0')),
+                    
+                    # Padding
+                    ('PADDING', (0, 0), (-1, -1), 10),
+                    ('BOTTOMPADDING', (0, 0), (-1, 0), 8),  # Padding embaixo das imagens
+                    ('TOPPADDING', (0, 1), (-1, 1), 8),    # Padding em cima do texto
+                    
+                    # Efeito sombra sutil
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#F5F5F5')),  # Fundo das imagens
+                ]))
+                
+                story.append(product_table)
+                story.append(Spacer(1, 20))
+        
+        # Rodapé
+        story.append(Spacer(1, 30))
+        footer_style = ParagraphStyle(
+            'Footer',
+            parent=styles['Normal'],
+            fontSize=10,
+            textColor=colors.grey,
+            alignment=TA_CENTER
+        )
+        story.append(Paragraph(
+            f"© {data.get('ano_atual', '2024')} - Todos os direitos reservados",
+            footer_style
+        ))
     
     async def _convert_pdf_to_image(self, pdf_path: str, output_path: str, format: str):
         """Converte PDF para imagem (método alternativo sem Poppler)"""

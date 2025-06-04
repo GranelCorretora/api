@@ -1,0 +1,72 @@
+{
+    "template_name": "catalogo_produtos",
+    "data": {
+        "data_geracao": "15/03/2024 14:30",
+        "ano_atual": "2024",
+        "catalogo_fabricantes": [
+            {
+                "nome_fabricante": "MULTILASER",
+                "produtos": [
+                    {
+                        "codigo_produto": "035734",
+                        "nome_produto": "ESCOVA DE DENTE SOFT C/ LIMPADOR DE LÍN. HC591 2UND",
+                        "preco_sugerido_reais": 6.06,
+                        "unidade": "2UN",
+                        "descricao_curta": "Escova de dente macia com limpador de língua.",
+                        "url_imagem_placeholder": "https://placehold.co/300x200/e0e0e0/777777?text=Escovas+HC591"
+                    },
+                    {
+                        "codigo_produto": "035810",
+                        "nome_produto": "ESCOVA DE DENTE POP CERDAS MACIAS SUND HC589 MULTILASER",
+                        "preco_sugerido_reais": 6.15,
+                        "unidade": "EMBALAGEM",
+                        "descricao_curta": "Escova de dente popular com cerdas macias.",
+                        "url_imagem_placeholder": "https://placehold.co/300x200/e0e0e0/777777?text=Escovas+HC589"
+                    },
+                    {
+                        "codigo_produto": "035730",
+                        "nome_produto": "ESCOVA DE DENTE INF C/ CAPA +32 UND HC581 MULTILASER",
+                        "preco_sugerido_reais": 5.87,
+                        "unidade": "2UN",
+                        "categoria": "Infantil",
+                        "descricao_curta": "Escova de dente infantil com capa protetora.",
+                        "url_imagem_placeholder": "https://placehold.co/300x200/e0e0e0/777777?text=Escovas+HC581"
+                    },
+                    {
+                        "codigo_produto": "037095",
+                        "nome_produto": "TERMOMETRO CLINICO DIGITAL BARBIE HC202 MULTILASER",
+                        "preco_sugerido_reais": 8.33,
+                        "unidade": "1UN",
+                        "descricao_curta": "Termômetro clínico digital temático da Barbie.",
+                        "url_imagem_placeholder": "https://placehold.co/300x200/e0e0e0/777777?text=Termômetro+HC202"
+                    }
+                ]
+            },
+            {
+                "nome_fabricante": "FISHER PRICE",
+                "produtos": [
+                    {
+                        "codigo_produto": "037386",
+                        "nome_produto": "ESPAÇADOR FISHER PRICE HC188 MULTILASER (T)",
+                        "preco_sugerido_reais": 28.73,
+                        "unidade": "1UN",
+                        "categoria": "Infantil",
+                        "descricao_curta": "Espaçador para medicamentos inalatórios.",
+                        "url_imagem_placeholder": "https://placehold.co/300x200/e0e0e0/777777?text=Espaçador+HC188"
+                    },
+                    {
+                        "codigo_produto": "034987",
+                        "nome_produto": "SERINGA NASAL INF FISHER PRICE COELHO HC395 MULTILASER (TI)",
+                        "preco_sugerido_reais": 22.86,
+                        "unidade": "1UN",
+                        "categoria": "Infantil",
+                        "descricao_curta": "Seringa nasal infantil tema coelho.",
+                        "url_imagem_placeholder": "https://placehold.co/300x200/e0e0e0/777777?text=Seringa+Nasal+HC395"
+                    }
+                ]
+            }
+        ]
+    },
+    "output_format": "pdf",
+    "upload_to_minio": false
+} 

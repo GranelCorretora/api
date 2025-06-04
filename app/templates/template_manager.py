@@ -49,6 +49,31 @@ class TemplateManager:
                         {"texto": "Notícia sem bandeira exemplo"}
                     ]
                 }
+            },
+            "catalogo_produtos": {
+                "name": "Catálogo de Produtos",
+                "description": "Template para catálogo de produtos organizados por fabricante",
+                "required_fields": ["catalogo_fabricantes"],
+                "optional_fields": ["data_geracao", "ano_atual"],
+                "example_data": {
+                    "data_geracao": "15/03/2024 14:30",
+                    "ano_atual": "2024",
+                    "catalogo_fabricantes": [
+                        {
+                            "nome_fabricante": "MULTILASER",
+                            "produtos": [
+                                {
+                                    "codigo_produto": "035734",
+                                    "nome_produto": "ESCOVA DE DENTE SOFT C/ LIMPADOR DE LÍN. HC591 2UND",
+                                    "preco_sugerido_reais": 6.06,
+                                    "unidade": "2UN",
+                                    "descricao_curta": "Escova de dente macia com limpador de língua.",
+                                    "url_imagem_placeholder": "https://placehold.co/300x200/e0e0e0/777777?text=Escovas+HC591"
+                                }
+                            ]
+                        }
+                    ]
+                }
             }
         }
     

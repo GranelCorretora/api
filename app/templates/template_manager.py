@@ -34,6 +34,21 @@ class TemplateManager:
                     "endereco": "São Paulo, SP, Brasil",
                     "carga_horaria": "40 horas"
                 }
+            },
+            "fique_de_olho": {
+                "name": "Fique de Olho!",
+                "description": "Template para boletim informativo com lista de notícias",
+                "required_fields": ["dia_semana", "lista_noticias"],
+                "optional_fields": ["titulo_customizado"],
+                "example_data": {
+                    "dia_semana": "Segunda-feira",
+                    "lista_noticias": [
+                        {"flag": "🇧🇷", "texto": "Mercado brasileiro em alta"},
+                        {"flag": "🌎", "texto": "Commodities internacionais estáveis"},
+                        {"flag": "📈", "texto": "Soja com expectativa de crescimento"},
+                        {"texto": "Notícia sem bandeira exemplo"}
+                    ]
+                }
             }
         }
     

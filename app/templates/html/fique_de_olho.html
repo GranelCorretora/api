@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Fique de Olho! - {{ dia_semana }}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80") no-repeat center center fixed;
+            background-size: cover;
+        }
+        .container {
+            background: rgba(0,0,0,0.75);
+            max-width: 420px;
+            margin: 40px auto 0 auto;
+            border-radius: 36px;
+            padding: 32px 28px 24px 28px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .logo-bar {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            top: -38px;
+            left: 24px;
+        }
+        .logo {
+            width: 70px;
+            height: 70px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #2e7d32;
+            border: 3px solid #e0e0e0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .logo img {
+            width: 90%;
+            height: 90%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+        .bar {
+            background: #2e7d32;
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 18px;
+            margin-left: -12px;
+            font-size: 1.1em;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .title {
+            color: #fff;
+            text-align: center;
+            font-size: 2em;
+            margin-top: 38px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .underline {
+            width: 60px;
+            height: 3px;
+            background: #fff;
+            margin: 0 auto 18px auto;
+            border-radius: 2px;
+        }
+        ul {
+            color: #fff;
+            font-size: 1.1em;
+            margin-bottom: 28px;
+            margin-top: 0;
+            padding-left: 18px;
+        }
+        ul li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .flag {
+            font-size: 1.2em;
+            margin-right: 8px;
+        }
+        .dots {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #2947a9;
+            border-radius: 50%;
+            margin: 0 2px;
+        }
+        .dot.inactive {
+            background: #b0b7c3;
+        }
+        .footer {
+            text-align: center;
+            color: #fff;
+            font-size: 1em;
+            opacity: 0.85;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-bar">
+            <div class="logo">
+                <img src="public/logo.jpg" alt="Logo Granel Corretora">
+            </div>
+            <div class="bar">
+                Fique de Olho!
+            </div>
+        </div>
+        <div class="title">{{ dia_semana }}</div>
+        <div class="underline"></div>
+        <ul>
+            {% for item in lista_noticias %}
+            <li>
+                {% if item.flag %}
+                    <span class="flag">{{ item.flag }}</span>
+                {% endif %}
+                {{ item.texto }}
+            </li>
+            {% endfor %}
+        </ul>
+        <div class="dots">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot inactive"></span>
+        </div>
+        <div class="footer">@granelcorretora</div>
+    </div>
+</body>
+</html> 

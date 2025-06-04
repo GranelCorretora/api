@@ -2,200 +2,91 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo de Produtos</title>
-    <style>
-        :root {
-            --primary-color: #2196F3;
-            --secondary-color: #FFC107;
-            --text-color: #333;
-            --light-gray: #f5f5f5;
-            --card-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        body {
-            margin: 0;
-            padding: 20px;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: var(--light-gray);
-            color: var(--text-color);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: var(--card-shadow);
-        }
-
-        .header h1 {
-            color: var(--primary-color);
-            margin: 0;
-            font-size: 2.5em;
-        }
-
-        .header p {
-            color: #666;
-            margin: 10px 0 0 0;
-        }
-
-        .manufacturer-section {
-            margin-bottom: 40px;
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: var(--card-shadow);
-        }
-
-        .manufacturer-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--primary-color);
-        }
-
-        .manufacturer-name {
-            font-size: 1.8em;
-            color: var(--primary-color);
-            margin: 0;
-            flex-grow: 1;
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            padding: 10px;
-        }
-
-        .product-card {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.2s;
-            border: 1px solid #e0e0e0;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .product-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .product-info {
-            padding: 15px;
-        }
-
-        .product-code {
-            color: #666;
-            font-size: 0.9em;
-            margin: 0;
-        }
-
-        .product-name {
-            margin: 10px 0;
-            font-size: 1.1em;
-            color: var(--text-color);
-            font-weight: 600;
-        }
-
-        .product-description {
-            color: #666;
-            font-size: 0.9em;
-            margin: 10px 0;
-            line-height: 1.4;
-        }
-
-        .product-price {
-            font-size: 1.4em;
-            color: var(--primary-color);
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .product-unit {
-            display: inline-block;
-            background: var(--secondary-color);
-            color: white;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            margin-left: 10px;
-        }
-
-        .product-category {
-            display: inline-block;
-            background: var(--primary-color);
-            color: white;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            margin-right: 10px;
-        }
-
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        @media (max-width: 768px) {
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2196F3',
+                        secondary: '#FFC107',
+                    }
+                }
             }
         }
-    </style>
+    </script>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Catálogo de Produtos</h1>
-            <p>Atualizado em: {{ data_geracao }}</p>
+<body class="bg-gray-50 text-gray-800 font-sans">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-12 bg-white rounded-lg shadow-md p-8">
+            <h1 class="text-4xl font-bold text-primary mb-4">CATÁLOGO DE PRODUTOS</h1>
+            <p class="text-gray-600 text-lg">Atualizado em: {{ data_geracao }}</p>
         </div>
 
+        <!-- Fabricantes -->
         {% for fabricante in catalogo_fabricantes %}
-        <section class="manufacturer-section">
-            <div class="manufacturer-header">
-                <h2 class="manufacturer-name">{{ fabricante.nome_fabricante }}</h2>
+        <section class="mb-12 bg-white rounded-lg shadow-md overflow-hidden">
+            <!-- Header do Fabricante -->
+            <div class="bg-gradient-to-r from-primary to-blue-600 text-white p-6">
+                <h2 class="text-3xl font-bold">{{ fabricante.nome_fabricante }}</h2>
             </div>
             
-            <div class="products-grid">
-                {% for produto in fabricante.produtos %}
-                <div class="product-card">
-                    <img class="product-image" src="{{ produto.url_imagem_placeholder }}" alt="{{ produto.nome_produto }}">
-                    <div class="product-info">
-                        <p class="product-code">Código: {{ produto.codigo_produto }}</p>
-                        <h3 class="product-name">{{ produto.nome_produto }}</h3>
-                        {% if produto.categoria %}
-                        <span class="product-category">{{ produto.categoria }}</span>
-                        {% endif %}
-                        <span class="product-unit">{{ produto.unidade }}</span>
-                        <p class="product-description">{{ produto.descricao_curta }}</p>
-                        <p class="product-price">
-                            R$ {{ "%.2f"|format(produto.preco_sugerido_reais|float) }}
-                        </p>
+            <!-- Grid de Produtos -->
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {% for produto in fabricante.produtos %}
+                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 hover:-translate-y-1 transform transition-transform">
+                        <!-- Imagem do Produto -->
+                        <div class="relative">
+                            <img class="w-full h-48 object-cover" 
+                                 src="{{ produto.url_imagem_placeholder }}" 
+                                 alt="{{ produto.nome_produto }}"
+                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNTAgMTAwTDEyMCA4MEgxODBMMTUwIDEwMFoiIGZpbGw9IiM5Q0EzQUYiLz4KPHN2Zz4K'">
+                            {% if produto.categoria %}
+                            <span class="absolute top-2 right-2 bg-primary text-white px-2 py-1 rounded-full text-xs font-medium">
+                                {{ produto.categoria }}
+                            </span>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Informações do Produto -->
+                        <div class="p-4">
+                            <!-- Código do Produto -->
+                            <p class="text-gray-500 text-sm font-mono mb-2">Cód: {{ produto.codigo_produto }}</p>
+                            
+                            <!-- Nome do Produto -->
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2 overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; min-height: 3.5rem;">
+                                {{ produto.nome_produto }}
+                            </h3>
+                            
+                            <!-- Descrição -->
+                            <p class="text-gray-600 text-sm mb-3 overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                {{ produto.descricao_curta }}
+                            </p>
+                            
+                            <!-- Preço e Unidade -->
+                            <div class="flex items-center justify-between">
+                                <div class="text-2xl font-bold text-green-600">
+                                    R$ {{ "%.2f"|format(produto.preco_sugerido_reais|float) }}
+                                </div>
+                                <span class="bg-secondary text-white px-2 py-1 rounded text-xs font-medium">
+                                    {{ produto.unidade }}
+                                </span>
+                            </div>
+                        </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
         </section>
         {% endfor %}
 
-        <div class="footer">
-            <p>© {{ ano_atual }} - Todos os direitos reservados</p>
+        <!-- Footer -->
+        <div class="text-center py-8">
+            <p class="text-gray-500">© {{ ano_atual }} - Todos os direitos reservados</p>
         </div>
     </div>
 </body>

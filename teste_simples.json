@@ -58,6 +58,6 @@
             }
         ]
     },
-    "output_format": "png",
+    "output_format": "pdf",
     "upload_to_minio": false
 } 

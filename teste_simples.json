@@ -13,7 +13,7 @@
                         "preco_sugerido_reais": 6.06,
                         "unidade": "2UN",
                         "descricao_curta": "Escova de dente macia",
-                        "url_imagem_placeholder": "https://placehold.co/300x200/e0e0e0/777777?text=Produto+Teste"
+                        "url_imagem_placeholder": "https://cdn-icons-png.flaticon.com/512/5969/5969113.png"
                     },
                     {
                         "codigo_produto": "035810",
@@ -21,7 +21,7 @@
                         "preco_sugerido_reais": 6.15,
                         "unidade": "EMBALAGEM",
                         "descricao_curta": "Escova de dente popular",
-                        "url_imagem_placeholder": "https://placehold.co/300x200/e0e0e0/777777?text=Produto+Teste"
+                        "url_imagem_placeholder": "https://cdn-icons-png.flaticon.com/512/5969/5969113.png"
                     },
                     {
                         "codigo_produto": "036001",
@@ -29,7 +29,7 @@
                         "preco_sugerido_reais": 8.99,
                         "unidade": "1UN",
                         "descricao_curta": "Creme dental com flúor",
-                        "url_imagem_placeholder": "https://placehold.co/300x200/e0e0e0/777777?text=Produto+Teste"
+                        "url_imagem_placeholder": "https://cdn-icons-png.flaticon.com/512/5969/5969113.png"
                     }
                 ]
             },
@@ -43,7 +43,7 @@
                         "unidade": "1UN",
                         "categoria": "Infantil",
                         "descricao_curta": "Espaçador para medicamentos",
-                        "url_imagem_placeholder": "https://placehold.co/300x200/e0e0e0/777777?text=Produto+Teste"
+                        "url_imagem_placeholder": "https://cdn-icons-png.flaticon.com/512/5969/5969113.png"
                     },
                     {
                         "codigo_produto": "037500",
@@ -52,7 +52,7 @@
                         "unidade": "1UN",
                         "categoria": "Infantil",
                         "descricao_curta": "Brinquedo educativo colorido",
-                        "url_imagem_placeholder": "https://placehold.co/300x200/e0e0e0/777777?text=Produto+Teste"
+                        "url_imagem_placeholder": "https://cdn-icons-png.flaticon.com/512/5969/5969113.png"
                     }
                 ]
             }

@@ -5,10 +5,14 @@ from typing import Dict, Any, Literal
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 import platform
+import uuid
+import subprocess
+import sys
+import requests
+from io import BytesIO
 
 from jinja2 import Environment, FileSystemLoader
 from PIL import Image, ImageDraw, ImageFont
-from io import BytesIO
 import base64
 
 from ..templates.template_manager import TemplateManager
@@ -710,25 +714,49 @@ class DocumentGenerator:
                 # Criar dados da tabela para esta linha
                 table_data = []
                 
-                # Linha com imagens placeholder
+                # Linha com imagens
                 img_row = []
                 for produto in row_products:
-                    # Criar placeholder de imagem simples usando Drawing
                     try:
-                        d = Drawing(120, 80)
-                        d.add(Rect(0, 0, 120, 80, fillColor=colors.lightblue, strokeColor=colors.blue, strokeWidth=1))
-                        d.add(String(60, 45, "PRODUTO", textAnchor='middle', fontSize=10, fillColor=colors.blue))
-                        d.add(String(60, 30, produto['codigo_produto'], textAnchor='middle', fontSize=8, fillColor=colors.darkblue))
-                        
-                        # Renderizar como imagem
-                        img_buffer = BytesIO()
-                        renderPDF.drawToFile(d, img_buffer, fmt='PNG')
-                        img_buffer.seek(0)
-                        
-                        img = RLImage(img_buffer, width=100, height=67)
-                        img_row.append(img)
+                        # Tentar baixar a imagem real da URL
+                        image_url = produto.get('url_imagem_placeholder', '')
+                        if image_url:
+                            img_buffer = self._download_image_from_url(image_url, max_size=(120, 80))
+                            
+                            if img_buffer:
+                                # Usar a imagem real baixada
+                                img = RLImage(img_buffer, width=100, height=67)
+                                img_row.append(img)
+                            else:
+                                # Fallback: criar placeholder simples
+                                d = Drawing(120, 80)
+                                d.add(Rect(0, 0, 120, 80, fillColor=colors.lightblue, strokeColor=colors.blue, strokeWidth=1))
+                                d.add(String(60, 45, "IMAGEM", textAnchor='middle', fontSize=10, fillColor=colors.blue))
+                                d.add(String(60, 30, produto['codigo_produto'], textAnchor='middle', fontSize=8, fillColor=colors.darkblue))
+                                
+                                img_buffer = BytesIO()
+                                renderPDF.drawToFile(d, img_buffer, fmt='PNG')
+                                img_buffer.seek(0)
+                                
+                                img = RLImage(img_buffer, width=100, height=67)
+                                img_row.append(img)
+                        else:
+                            # Sem URL de imagem: usar placeholder
+                            d = Drawing(120, 80)
+                            d.add(Rect(0, 0, 120, 80, fillColor=colors.lightgrey, strokeColor=colors.grey, strokeWidth=1))
+                            d.add(String(60, 45, "SEM IMAGEM", textAnchor='middle', fontSize=9, fillColor=colors.darkgrey))
+                            d.add(String(60, 30, produto['codigo_produto'], textAnchor='middle', fontSize=8, fillColor=colors.darkgrey))
+                            
+                            img_buffer = BytesIO()
+                            renderPDF.drawToFile(d, img_buffer, fmt='PNG')
+                            img_buffer.seek(0)
+                            
+                            img = RLImage(img_buffer, width=100, height=67)
+                            img_row.append(img)
+                            
                     except Exception as e:
-                        # Fallback: usar texto
+                        print(f"⚠️ Erro ao processar imagem do produto {produto.get('codigo_produto', '')}: {e}")
+                        # Fallback final: usar texto
                         placeholder_style = ParagraphStyle(
                             'PlaceholderStyle',
                             parent=styles['Normal'],
@@ -737,7 +765,7 @@ class DocumentGenerator:
                             textColor=colors.blue,
                             backColor=colors.lightblue
                         )
-                        img_row.append(Paragraph("[IMAGEM DO PRODUTO]", placeholder_style))
+                        img_row.append(Paragraph("[ERRO NA IMAGEM]", placeholder_style))
                 
                 # Preencher linha se houver apenas 1 produto
                 while len(img_row) < 2:
@@ -930,4 +958,39 @@ class DocumentGenerator:
                         os.remove(file_path)
                         print(f"Arquivo temporário removido: {filename}")
         except Exception as e:
-            print(f"Erro ao limpar arquivos temporários: {e}") 
+            print(f"Erro ao limpar arquivos temporários: {e}")
+    
+    def _download_image_from_url(self, url: str, max_size: tuple = (300, 200)) -> BytesIO:
+        """
+        Download an image from URL and return it as BytesIO
+        """
+        try:
+            # Set a timeout and user agent
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+            
+            response = requests.get(url, headers=headers, timeout=10, stream=True)
+            response.raise_for_status()
+            
+            # Load image
+            img = Image.open(BytesIO(response.content))
+            
+            # Convert to RGB if necessary  
+            if img.mode in ('RGBA', 'LA', 'P'):
+                img = img.convert('RGB')
+            
+            # Resize if too large
+            if img.size[0] > max_size[0] or img.size[1] > max_size[1]:
+                img.thumbnail(max_size, Image.Resampling.LANCZOS)
+            
+            # Save to BytesIO
+            img_buffer = BytesIO()
+            img.save(img_buffer, format='PNG')
+            img_buffer.seek(0)
+            
+            return img_buffer
+            
+        except Exception as e:
+            print(f"⚠️ Erro ao baixar imagem de {url}: {e}")
+            return None 
